@@ -3,6 +3,7 @@ package com.anjun.eskokado.apideliveryesk.domain.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "clients")
@@ -17,4 +18,7 @@ public class Client {
 
     @Column(length = 150, nullable = false, unique = true)
     private String email;
+
+    @OneToMany(mappedBy = "client")
+    private List<Address> addresses;
 }

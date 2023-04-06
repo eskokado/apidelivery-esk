@@ -29,6 +29,13 @@ public class Order {
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "address_of_delivery_id")
+    private Address addressOfDelivery;
+
+    @ManyToOne
+    private Supplier supplier;
+
     @PrePersist
     public void prePersist(){
         setOrderDate(LocalDateTime.now());

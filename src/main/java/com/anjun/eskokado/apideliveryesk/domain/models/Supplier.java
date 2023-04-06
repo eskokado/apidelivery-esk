@@ -3,6 +3,7 @@ package com.anjun.eskokado.apideliveryesk.domain.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "suppliers")
@@ -20,4 +21,7 @@ public class Supplier {
 
     @Column(name = "zip_code", length = 8, nullable = false)
     private String zipCode;
+
+    @OneToMany(mappedBy = "supplier")
+    private List<Order> orders;
 }
