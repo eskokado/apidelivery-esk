@@ -17,10 +17,10 @@ public class OrderItem {
     @EmbeddedId
     private OrderItemPK id = new OrderItemPK();
 
-   @Column(precision = 10, scale = 2, columnDefinition = "NUMBER (10,2) DEFAULT 0.0")
+   @Column(precision = 10, scale = 2, columnDefinition = "DECIMAL (10,2) DEFAULT 0.0")
     private Double discount;
     private Integer quantity;
-    @Column(precision = 10, scale = 2, columnDefinition = "NUMBER (10,2) DEFAULT 0.0")
+    @Column(precision = 10, scale = 2, columnDefinition = "DECIMAL (10,2) DEFAULT 0.0")
     private Double price;
 
     public OrderItem(Order order, Product product, Double discount, Integer quantity, Double price) {

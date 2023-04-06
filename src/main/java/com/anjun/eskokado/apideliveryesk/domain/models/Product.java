@@ -17,7 +17,7 @@ public class Product {
     private Long id;
     @Column(length = 150, nullable = false, unique = true)
     private String name;
-    @Column(precision = 10, scale = 2, columnDefinition = "NUMBER (10,2) DEFAULT 0.0")
+    @Column(precision = 10, scale = 2, columnDefinition = "DECIMAL (10,2) DEFAULT 0.0")
     private Double price;
 
     @OneToMany(mappedBy = "id.product")
