@@ -1,6 +1,7 @@
 package com.anjun.eskokado.apideliveryesk.domain.models;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,20 +9,23 @@ import java.util.List;
 @Entity
 @Table(name = "suppliers")
 @Data
+@NoArgsConstructor
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50, nullable = false)
-    private String number;
+    @Column(length = 150, nullable = false)
+    private String name;
 
-    @Column(length = 100)
-    private String complement;
-
-    @Column(name = "zip_code", length = 8, nullable = false)
-    private String zipCode;
+    @Column(length = 150, nullable = false, unique = true)
+    private String email;
 
     @OneToMany(mappedBy = "supplier")
     private List<Order> orders;
+
+    public Supplier(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 }

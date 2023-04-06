@@ -22,4 +22,9 @@ public class Product {
 
     @OneToMany(mappedBy = "id.product")
     private Set<OrderItem> items = new HashSet<>();
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
 }

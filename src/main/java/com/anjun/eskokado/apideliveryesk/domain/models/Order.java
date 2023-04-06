@@ -18,7 +18,7 @@ import java.util.Set;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;
@@ -35,6 +35,11 @@ public class Order {
 
     @ManyToOne
     private Supplier supplier;
+
+    public Order(Address addressOfDelivery, Supplier supplier) {
+        this.addressOfDelivery = addressOfDelivery;
+        this.supplier = supplier;
+    }
 
     @PrePersist
     public void prePersist(){
