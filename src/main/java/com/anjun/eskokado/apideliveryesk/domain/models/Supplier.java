@@ -21,9 +21,6 @@ public class Supplier {
     @Column(length = 150, nullable = false, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "supplier")
-    private List<Order> orders;
-
     public Supplier(String name, String email) {
         this.name = name;
         this.email = email;

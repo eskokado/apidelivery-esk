@@ -26,9 +26,6 @@ public class Order {
     @Column(name = "state_delivery")
     private Integer stateDelivery;
 
-    @OneToMany(mappedBy = "id.order")
-    private Set<OrderItem> items = new HashSet<>();
-
     @ManyToOne
     @JoinColumn(name = "address_of_delivery_id")
     private Address addressOfDelivery;
@@ -45,12 +42,6 @@ public class Order {
     public void prePersist(){
         setOrderDate(LocalDateTime.now());
         setStateDelivery(StateDelivery.PENDING);
-    }
-
-    public List<Product> getProducts() {
-        List<Product> list = new ArrayList<>();
-        items.stream().map(x -> list.add(x.getProduct()));
-        return list;
     }
 
     public StateDelivery getStateDelivery() {
