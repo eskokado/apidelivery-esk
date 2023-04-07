@@ -59,4 +59,6 @@ public class OrderItem {
     public Product getProduct() {
         return id.getProduct();
     }
+
+    public Order getOrder() { return id.getOrder(); }
 }
