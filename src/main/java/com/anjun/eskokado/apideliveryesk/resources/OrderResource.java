@@ -10,6 +10,9 @@ import com.anjun.eskokado.apideliveryesk.resources.dto.ResponseError;
 import com.anjun.eskokado.apideliveryesk.services.*;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -33,6 +36,9 @@ public class OrderResource {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final Validator validator;
+    private final ZipCodeService zipCodeService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Inject
     public OrderResource(
@@ -43,6 +49,7 @@ public class OrderResource {
             OrderService orderService,
             OrderRepository orderRepository,
             OrderItemRepository orderItemRepository,
+            ZipCodeService zipCodeService,
             Validator validator
     ) {
         this.clientService = clientService;
@@ -53,13 +60,14 @@ public class OrderResource {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.validator = validator;
+        this.zipCodeService = zipCodeService;
     }
 
     @POST
     @Transactional
     public Response createOrder(CreateDeliveryRequest deliveryRequest) {
         Set<ConstraintViolation<CreateDeliveryRequest>> violations = validator.validate(deliveryRequest);
-        if(!violations.isEmpty()){
+        if (!violations.isEmpty()) {
             return ResponseError
                     .createFromValidation(violations)
                     .withStatusCode(ResponseError.UNPROCESSABLE_ENTITY_STATUS);
@@ -69,6 +77,7 @@ public class OrderResource {
         Supplier supplier = supplierService.findById(deliveryRequest.getSupplierId());
         Product product = productService.findById(deliveryRequest.getProductId());
         Address address = addressService.findByClientId(client.getId());
+        ZipCodeAddress zipCodeAddress = zipCodeService.getZipCodeAddress(address.getZipCode());
         try {
             Order order = new Order(address, supplier);
             OrderItem orderItem = new OrderItem(order, product, deliveryRequest.getDiscount(), deliveryRequest.getQuantity(), product.getPrice());
@@ -76,6 +85,7 @@ public class OrderResource {
             orderRepository.persist(order);
             orderItemRepository.persist(orderItem);
 
+            deliveryResponse.setZipCodeAddress(zipCodeAddress);
             deliveryResponse.setOrder(order);
             deliveryResponse.setOrderItems(Arrays.asList(orderItem));
             return Response.ok(deliveryResponse).status(Response.Status.CREATED.getStatusCode()).build();
@@ -97,6 +107,7 @@ public class OrderResource {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), ResponseError.DEFAULT_ERROR_MESSAGE).build();
         }
     }
+
     @POST
     @Path("{orderId}/cancel")
     @Transactional
@@ -109,5 +120,20 @@ public class OrderResource {
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), ResponseError.DEFAULT_ERROR_MESSAGE).build();
         }
+    }
+
+    @GET
+    @Path("/search")
+
+    public Response search(@QueryParam("terms") String terms) {
+        TypedQuery<Order> query = entityManager.createQuery(
+                "SELECT o FROM Order o " +
+                        "WHERE o.addressOfDelivery.client.name " +
+                        "LIKE :terms OR o.supplier.name LIKE :terms",
+                Order.class
+        );
+        query.setParameter("terms", "%" + terms + "%");
+        List<Order> list = query.getResultList();
+        return Response.ok(list).build();
     }
 }
