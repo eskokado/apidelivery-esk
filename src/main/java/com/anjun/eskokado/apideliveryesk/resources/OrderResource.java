@@ -9,6 +9,7 @@ import com.anjun.eskokado.apideliveryesk.resources.dto.CreateDeliveryResponse;
 import com.anjun.eskokado.apideliveryesk.resources.dto.ResponseError;
 import com.anjun.eskokado.apideliveryesk.services.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -63,6 +64,7 @@ public class OrderResource {
         this.zipCodeService = zipCodeService;
     }
 
+    @RolesAllowed({"USER", "ADMIN"})
     @POST
     @Transactional
     public Response createOrder(CreateDeliveryRequest deliveryRequest) {
@@ -94,6 +96,7 @@ public class OrderResource {
         }
     }
 
+    @RolesAllowed({"USER", "ADMIN"})
     @POST
     @Path("{orderId}/delivered")
     @Transactional
@@ -108,6 +111,7 @@ public class OrderResource {
         }
     }
 
+    @RolesAllowed({"USER", "ADMIN"})
     @POST
     @Path("{orderId}/cancel")
     @Transactional
@@ -122,9 +126,9 @@ public class OrderResource {
         }
     }
 
+    @RolesAllowed({"USER", "ADMIN"})
     @GET
     @Path("/search")
-
     public Response search(@QueryParam("terms") String terms) {
         TypedQuery<Order> query = entityManager.createQuery(
                 "SELECT o FROM Order o " +

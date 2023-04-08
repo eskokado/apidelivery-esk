@@ -1,10 +1,9 @@
 package com.anjun.eskokado.apideliveryesk.resources;
 
-import com.anjun.eskokado.apideliveryesk.domain.enums.StateDelivery;
 import com.anjun.eskokado.apideliveryesk.domain.models.OrderItem;
 import com.anjun.eskokado.apideliveryesk.domain.repositories.OrderItemRepository;
-import com.anjun.eskokado.apideliveryesk.resources.dto.ResponseError;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -21,6 +20,7 @@ public class ProductResource {
     }
 
 
+    @RolesAllowed({"USER", "ADMIN"})
     @GET
     @Path("{id}/orderItems")
     public Response findOrderByProductId(@PathParam("id") Long id) {
