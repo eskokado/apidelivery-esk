@@ -27,9 +27,6 @@ public class Address {
     @ManyToOne
     private Client client;
 
-    @OneToMany(mappedBy = "addressOfDelivery")
-    private List<Order> orders;
-
     public Address(String number, String complement, String zipCode, Client client) {
         this.number = number;
         this.complement = complement;

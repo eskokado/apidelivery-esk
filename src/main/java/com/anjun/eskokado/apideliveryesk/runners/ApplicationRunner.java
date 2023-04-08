@@ -54,8 +54,8 @@ public class ApplicationRunner {
             Client cli1 = new Client("Maria Silva", "maria@gmail.com");
             Client cli2 = new Client("Paulo Silva", "paulo@gmail.com");
             Supplier sup = new Supplier("João Souza", "joao@gmail.com");
-            Address add1 = new Address( "300", "Apto 203", "38220834", cli1) ;
-            Address add2 = new Address( "600", "Apto 603", "38220834", cli2) ;
+            Address add1 = new Address( "300", "Apto 203", "05577200", cli1) ;
+            Address add2 = new Address( "600", "Apto 603", "05577200", cli2) ;
 
             Order order1 = new Order(add1, sup);
             Order order2 = new Order(add2, sup);
